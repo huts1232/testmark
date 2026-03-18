@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
             // Continue anyway - profile creation failure shouldn't block auth
           } else {
             // Create default notification settings for new user
-            await supabase
+            const { error: notifError } = await supabase
               .from('notification_settings')
               .insert({
                 user_id: data.user.id,
@@ -73,9 +73,9 @@ export async function GET(request: NextRequest) {
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
               })
-              .catch((err) => {
-                console.error('Notification settings creation error:', err.message)
-              })
+            if (notifError) {
+              console.error('Notification settings creation error:', notifError.message)
+            }
           }
         } else if (profileError) {
           console.error('Profile check error:', profileError.message)

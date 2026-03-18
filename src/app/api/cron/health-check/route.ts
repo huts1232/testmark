@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
 
     let successCount = 0;
     let failureCount = 0;
-    const alerts = [];
+    const alerts: any[] = [];
 
     // Process bookmarks in batches to avoid overwhelming the system
     const batchSize = 10;
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
               alert_type: 'url_down',
               title: `Bookmark "${bookmark.title}" is down`,
               message: `URL: ${bookmark.url}\nStatus: ${checkResult.status || 'Error'}\nError: ${checkResult.error || 'Unknown error'}`,
-              severity: checkResult.status >= 500 ? 'high' : 'medium',
+              severity: (checkResult.status ?? 0) >= 500 ? 'high' : 'medium',
               is_read: false,
               created_at: now.toISOString()
             };

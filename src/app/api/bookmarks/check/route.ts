@@ -1,6 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 
 // Database types
 interface Bookmark {
@@ -28,27 +27,7 @@ interface HealthCheck {
 
 export async function POST(request: Request) {
   try {
-    // Create Supabase client with auth context
-    const cookieStore = cookies()
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        auth: {
-          getSession: async () => {
-            const authToken = cookieStore.get('sb-access-token')?.value
-            if (!authToken) return { data: { session: null }, error: null }
-            
-            const { data, error } = await createClient(
-              process.env.NEXT_PUBLIC_SUPABASE_URL!,
-              process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-            ).auth.getSession()
-            
-            return { data, error }
-          }
-        }
-      }
-    )
+    const supabase = createClient()
 
     // Get user from session
     const { data: { user }, error: authError } = await supabase.auth.getUser()

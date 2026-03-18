@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
-import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -53,18 +52,7 @@ interface HealthCheck {
 }
 
 async function getBookmarkStats(): Promise<BookmarkStats> {
-  const cookieStore = cookies()
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        },
-      },
-    }
-  )
+  const supabase = createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   
@@ -120,18 +108,7 @@ async function getBookmarkStats(): Promise<BookmarkStats> {
 }
 
 async function getRecentAlerts(): Promise<RecentAlert[]> {
-  const cookieStore = cookies()
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        },
-      },
-    }
-  )
+  const supabase = createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   
@@ -162,8 +139,8 @@ async function getRecentAlerts(): Promise<RecentAlert[]> {
   return alerts.map(alert => ({
     id: alert.id,
     bookmark_id: alert.bookmark_id,
-    bookmark_url: alert.bookmarks.url,
-    bookmark_title: alert.bookmarks.title,
+    bookmark_url: (alert.bookmarks as any)?.[0]?.url ?? '',
+    bookmark_title: (alert.bookmarks as any)?.[0]?.title ?? '',
     status: alert.status as 'error' | 'warning' | 'info',
     message: alert.message,
     created_at: alert.created_at
@@ -171,18 +148,7 @@ async function getRecentAlerts(): Promise<RecentAlert[]> {
 }
 
 async function getRecentHealthChecks(): Promise<HealthCheck[]> {
-  const cookieStore = cookies()
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        },
-      },
-    }
-  )
+  const supabase = createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   
@@ -219,8 +185,8 @@ async function getRecentHealthChecks(): Promise<HealthCheck[]> {
     error_message: check.error_message,
     checked_at: check.checked_at,
     bookmark: {
-      url: check.bookmarks.url,
-      title: check.bookmarks.title
+      url: (check.bookmarks as any)?.[0]?.url ?? '',
+      title: (check.bookmarks as any)?.[0]?.title ?? ''
     }
   }))
 }

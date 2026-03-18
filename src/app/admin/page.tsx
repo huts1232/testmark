@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/client'
 import { 
   Users, 
   Globe, 
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
 
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   // Mock chart data for growth trends
   const userGrowthData = [

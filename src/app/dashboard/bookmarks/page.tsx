@@ -1,5 +1,4 @@
-import { createServerComponentClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -31,7 +30,7 @@ interface Bookmark {
 }
 
 async function getBookmarks(): Promise<Bookmark[]> {
-  const supabase = createServerComponentClient({ cookies })
+  const supabase = createClient()
   
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) {

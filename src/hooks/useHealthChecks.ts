@@ -131,7 +131,7 @@ export function useHealthChecks(options: UseHealthChecksOptions = {}): UseHealth
         throw new Error(fetchError.message);
       }
 
-      const newHealthChecks = data as HealthCheck[];
+      const newHealthChecks = data as unknown as HealthCheck[];
 
       if (reset) {
         setHealthChecks(newHealthChecks);
@@ -216,7 +216,7 @@ export function useHealthChecks(options: UseHealthChecksOptions = {}): UseHealth
 
           if (data) {
             setHealthChecks(prev => {
-              const updated = [data as HealthCheck, ...prev];
+              const updated = [data as unknown as HealthCheck, ...prev];
               setStats(calculateStats(updated));
               return updated;
             });

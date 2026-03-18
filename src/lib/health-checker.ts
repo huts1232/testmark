@@ -329,7 +329,7 @@ export async function getBookmarkHealthHistory(
     }
 
     return (data || []).map(record => ({
-      url: record.bookmark?.url || '',
+      url: (record.bookmark as any)?.[0]?.url ?? (record.bookmark as any)?.url ?? '',
       status: record.status as 'success' | 'error' | 'timeout',
       statusCode: record.status_code || undefined,
       responseTime: record.response_time_ms,

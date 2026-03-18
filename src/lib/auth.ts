@@ -203,9 +203,9 @@ export const hasPermission = async (requiredPlan: 'free' | 'pro' | 'enterprise')
   const profile = await getProfile()
   if (!profile) return false
 
-  const planHierarchy = { free: 0, pro: 1, enterprise: 2 }
-  const userPlanLevel = planHierarchy[profile.plan_type]
-  const requiredPlanLevel = planHierarchy[requiredPlan]
+  const planHierarchy: Record<string, number> = { free: 0, pro: 1, enterprise: 2 }
+  const userPlanLevel = planHierarchy[profile.plan_type] ?? 0
+  const requiredPlanLevel = planHierarchy[requiredPlan] ?? 0
 
   return userPlanLevel >= requiredPlanLevel
 }

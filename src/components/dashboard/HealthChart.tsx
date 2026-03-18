@@ -180,12 +180,13 @@ export default function HealthChart({ data, type }: HealthChartProps) {
                   cy={y}
                   r="8"
                   className="fill-transparent cursor-pointer"
-                  title={`${point.time}: ${
-                    type === 'response-time' 
+                >
+                  <title>{`${point.time}: ${
+                    type === 'response-time'
                       ? `${Math.round(point.value)}ms`
                       : `${point.value.toFixed(1)}%`
-                  }`}
-                />
+                  }`}</title>
+                </circle>
               </g>
             );
           })}
